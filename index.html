@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>TBOI:R MC</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>TBOI:R MOD CONSTRUCTOR</h1>
+      <a href="https://steamcommunity.com/id/6ondawave9/" target="_blank">by ondawave</a>
+      <div>
+        <input type="text" id="mod-name" placeholder="Mod name">
+        <button id="build-mod-btn" class="green-btn">Build mod</button>
+      </div>
+    </header>
+
+    <div id="main">
+      <div id="add-btn">
+        <div id="add-btn-text">Add item</div>
+      </div>
+      <div id="items-wrapper"></div>
+    </div>
+
+    <div id="add-item-window-wrapper">
+      <div id="add-item-window">
+
+        <div class="col col-1">
+          <div class="col-item">
+            <p>Name</p>
+            <input id="add-item-name" type="text" placeholder="Item name">
+          </div>
+
+          <div class="col-item">
+            <p>Sprite</p>
+            <label>
+              <img id="add-item-img" src="resources/img.png">
+              <input id="add-item-sprite" type="file">
+            </label>
+          </div>
+  
+          <div class="col-item">
+            <p>Quality</p>
+            <select id="add-item-quality">
+              <option>0</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+            </select>
+          </div>
+
+          <div class="col-item">
+            <p>Description</p>
+            <textarea id="add-item-description" placeholder="Item description"></textarea>
+          </div>
+
+        </div>
+
+        <div class="col col-2">
+          <div class="col-item">
+            <img src="resources/pickups/Key.webp">
+            <input id="add-item-keys" placeholder="0" type="text">
+          </div>
+          <div class="col-item">
+            <img src="resources/pickups/Bomb.webp">
+            <input id="add-item-bombs" placeholder="0" type="text">
+          </div>
+          <div class="col-item">
+            <img src="resources/pickups/Penny.webp">
+            <input id="add-item-coins" placeholder="0" type="text">
+          </div>
+
+          <div class="col-item">
+            <img src="resources/pickups/Empty_Red_Heart.webp">
+            <input id="add-item-empty-hearts" placeholder="0" type="text">
+          </div>
+          <div class="col-item">
+            <img src="resources/pickups/Red_Heart.webp">
+            <input id="add-item-hearts" placeholder="0" type="text">
+          </div>
+          <div class="col-item">
+            <img src="resources/pickups/Soul_Heart.webp">
+            <input id="add-item-soulherats" placeholder="0" type="text">
+          </div>
+          <div class="col-item">
+            <img src="resources/pickups/Black_Heart.webp">
+            <input id="add-item-blackhearts" placeholder="0" type="text">
+          </div>
+          <div class="build-btn-wrapper">
+            <button id="build-item-btn" class="green-btn">Add</button>
+          </div>
+        </div>
+
+        <div class="col col-3">
+          <div class="col-item">
+            <p>Stats</p>
+            <button id="add-item-add-stat">+</button>
+            <div id="add-item-stats-wrapper"></div>
+          </div>
+  
+          <div class="col-item">
+            <p>Pools</p>
+            <button id="add-item-add-pool">+</button>
+            <div id="add-item-pools-wrapper"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="alert-wrapper">
+      <div id="alert">
+        <h2>Error!</h2>
+        <button>Ok</button>
+      </div>
+    </div>
+  </body>
+  <script src="src/client.js"></script>
+</html>

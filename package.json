@@ -1,0 +1,18 @@
+{
+  "name": "isaacmodconstructor",
+  "icon": "resources/icon.ico",
+  "version": "1.0.0",
+  "description": "TBOI:R mod constructor by ondawave",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "author": "https://github.com/6ondawave9",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^30.0.0"
+  },
+  "dependencies": {
+    "xmlbuilder2": "^3.1.1"
+  }
+}
