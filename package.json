@@ -1,6 +1,5 @@
 {
-  "name": "isaacmodconstructor",
-  "icon": "resources/icon.ico",
+  "name": "tboirmc",
   "version": "1.0.0",
   "description": "TBOI:R mod constructor by ondawave",
   "main": "main.js",
@@ -18,6 +17,8 @@
   },
   "build": {
     "win": {
+      "appId": "com.electron.tboirmc",
+      "productName": "TBOI:R MC",
       "icon": "resources/icon.ico",
       "target": "msi"
     }
