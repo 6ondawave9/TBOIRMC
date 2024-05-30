@@ -8,10 +8,10 @@
 <details>
   <summary>Contents</summary>
   <ol>
-    <li><a herf="#about">About</a></li>
-    <li><a herf="#getting-started">Getting Started</a></li>
-    <li><a herf="#usage">Usage</a></li>
-    <li><a herf="#roadmap">RoadMap</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">RoadMap</a></li>
   </ol>
 </details>
 
