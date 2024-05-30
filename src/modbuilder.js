@@ -1,6 +1,8 @@
 const fs = require('fs')
 const xml = require('xmlbuilder2')
 const child_process = require('child_process')
+const sharp = require('sharp')
+sharp.cache(false)
 
 exports.ModBuilder = {
     flagsDict: {
@@ -184,8 +186,14 @@ mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.item_${item.name.replaceAll(
     },
 
     saveImgs(files, appPath) {
-        files.forEach(el=>{
-            fs.copyFileSync(el.path, `${appPath}\\mod_output\\${this.modName}\\resources\\gfx\\items\\collectibles\\${el.name}`)
+        files.forEach(async el=>{
+            let path = `${appPath}\\mod_output\\${this.modName}\\resources\\gfx\\items\\collectibles\\`
+            fs.copyFileSync(el.path, `${path}${el.name}`)
+            let buffer = await sharp(`${path}${el.name}`)
+                .resize(32, 32, {fit: 'fill'})
+                .toBuffer()
+            fs.rmSync(`${path}${el.name}`)
+            sharp(buffer).toFile(`${path}${el.name}`)
         })
     }
 }

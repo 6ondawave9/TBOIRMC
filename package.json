@@ -13,6 +13,7 @@
     "electron": "^30.0.0"
   },
   "dependencies": {
+    "sharp": "^0.33.4",
     "xmlbuilder2": "^3.1.1"
   },
   "build": {
