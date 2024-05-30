@@ -15,7 +15,7 @@ const createWindow = () => {
     })
 
     ipcMain.on('build-mod', (event, mod) => {
-      ModBuilder.createMod(mod)
+      ModBuilder.createMod(mod, app.getPath('userData'))
     })
   
     win.loadFile('index.html')
@@ -26,4 +26,3 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
 })
-
