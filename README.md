@@ -26,7 +26,7 @@ You can design your own TBOI:R mods without any coding skills with a help of thi
 2. Install the app
 3. Get ready to create!
 <br>
-Also you can build TBOI:R yourself using the <a href="https://github.com/npm">npm</a>, <a href="https://github.com/electron-userland/electron-builder">electron-builder</a> and TBOI:R source code
+Also you can build TBOI:R MC yourself using the <a href="https://github.com/npm">npm</a>, <a href="https://github.com/electron-userland/electron-builder">electron-builder</a> and TBOI:R MC source code
 
 ## Usage
 
