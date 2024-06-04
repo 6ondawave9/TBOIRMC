@@ -33,62 +33,64 @@ exports.ModBuilder = {
     },
 
     modName: 'Sample mod',
+    appPath: '/',
 
     createMod(mod, appPath) {
         this.modName = mod.name
-        if (fs.existsSync(`${appPath}/mod_output/${this.modName}`)) {
+        this.appPath = appPath
+        if (fs.existsSync(`${this.appPath}/mod_output/${this.modName}`)) {
             console.log('Updating mod')
-            fs.rmSync(`${appPath}/mod_output/${this.modName}`, { recursive: true, force: true });
+            fs.rmSync(`${this.appPath}/mod_output/${this.modName}`, { recursive: true, force: true });
         } else {
             console.log('Creating mod')
         }
-        this.init(appPath)
+        this.init(this.appPath)
         mod.items.forEach((el, i)=>{
-            this.addItem(el, i, appPath)
+            this.addItem(el, i, this.appPath)
         })
-        this.saveImgs(mod.files, appPath)
+        this.saveImgs(mod.files, this.appPath)
         console.log('Mod builing complete')
         
-        child_process.exec(`start "" "${appPath}/mod_output"`)
+        child_process.exec(`start "" "${this.appPath}/mod_output"`)
     },
 
-    init: function(appPath) {
-        if (!fs.existsSync(`${appPath}/mod_output`)) {
-            fs.mkdirSync(`${appPath}/mod_output`)
+    init: function() {
+        if (!fs.existsSync(`${this.appPath}/mod_output`)) {
+            fs.mkdirSync(`${this.appPath}/mod_output`)
         }
-        fs.mkdirSync(`${appPath}/mod_output/${this.modName}`)
-        fs.mkdirSync(`${appPath}/mod_output/${this.modName}/resources`)
-        fs.mkdirSync(`${appPath}/mod_output/${this.modName}/resources/gfx`)
-        fs.mkdirSync(`${appPath}/mod_output/${this.modName}/resources/gfx/items`)
-        fs.mkdirSync(`${appPath}/mod_output/${this.modName}/resources/gfx/items/collectibles`)
+        fs.mkdirSync(`${this.appPath}/mod_output/${this.modName}`)
+        fs.mkdirSync(`${this.appPath}/mod_output/${this.modName}/resources`)
+        fs.mkdirSync(`${this.appPath}/mod_output/${this.modName}/resources/gfx`)
+        fs.mkdirSync(`${this.appPath}/mod_output/${this.modName}/resources/gfx/items`)
+        fs.mkdirSync(`${this.appPath}/mod_output/${this.modName}/resources/gfx/items/collectibles`)
         
-        fs.mkdirSync(`${appPath}/mod_output/${this.modName}/content`)
+        fs.mkdirSync(`${this.appPath}/mod_output/${this.modName}/content`)
         let items = xml.create()
         .ele('items')
         .att('gfxroot', 'gfx/items/')
         .att('version', '1')
         items.end()
-        fs.writeFileSync(`${appPath}/mod_output/${this.modName}/content/items.xml`, items.toString({prettyPrint: true}))
+        fs.writeFileSync(`${this.appPath}/mod_output/${this.modName}/content/items.xml`, items.toString({prettyPrint: true}))
 
         let itempools = xml.create()
         .ele('ItemPools')
         itempools.end()
-        fs.writeFileSync(`${appPath}/mod_output/${this.modName}/content/itempools.xml`, itempools.toString({prettyPrint: true}))
+        fs.writeFileSync(`${this.appPath}/mod_output/${this.modName}/content/itempools.xml`, itempools.toString({prettyPrint: true}))
 
         let dataToWrite = `local mod = RegisterMod("${this.modName}", 1)`
-        fs.writeFileSync(`${appPath}/mod_output/${this.modName}/main.lua`, dataToWrite)
+        fs.writeFileSync(`${this.appPath}/mod_output/${this.modName}/main.lua`, dataToWrite)
     },
 
-    addItem(item, index, appPath) {
-        this.addToItemsXml(item, index, appPath)
-        this.addToPoolsXml(item, appPath)
+    addItem(item, index) {
+        this.addToItemsXml(item, index, this.appPath)
+        this.addToPoolsXml(item, this.appPath)
         if (item.stats) {
-            this.addToLua(item, appPath)
+            this.addToLua(item, this.appPath)
         }
     },
 
-    addToItemsXml(item, index, appPath) {
-        let items = fs.readFileSync(`${appPath}/mod_output/${this.modName}/content/items.xml`, {encoding: 'utf-8'})
+    addToItemsXml(item, index) {
+        let items = fs.readFileSync(`${this.appPath}/mod_output/${this.modName}/content/items.xml`, {encoding: 'utf-8'})
         items = xml.convert(items, {format: 'object'})
 
         if (!items.items.passive) {
@@ -119,11 +121,11 @@ exports.ModBuilder = {
         })
 
         let updatedItems = xml.create(items)
-        fs.writeFileSync(`${appPath}/mod_output/${this.modName}/content/items.xml`, updatedItems.toString({prettyPrint: true}))
+        fs.writeFileSync(`${this.appPath}/mod_output/${this.modName}/content/items.xml`, updatedItems.toString({prettyPrint: true}))
     },
 
-    addToPoolsXml(item, appPath) {
-        let itempools = fs.readFileSync(`${appPath}/mod_output/${this.modName}/content/itempools.xml`, {encoding: 'utf-8'})
+    addToPoolsXml(item) {
+        let itempools = fs.readFileSync(`${this.appPath}/mod_output/${this.modName}/content/itempools.xml`, {encoding: 'utf-8'})
         itempools = (xml.convert(itempools, {format: 'object'}))
         item.pools.forEach(el=>{
             if (!itempools.ItemPools.Pool) {itempools.ItemPools.Pool = []}
@@ -154,10 +156,10 @@ exports.ModBuilder = {
             }
         })
         let updatedPools = xml.create(itempools)
-        fs.writeFileSync(`${appPath}/mod_output/${this.modName}/content/itempools.xml`, updatedPools.toString({prettyPrint: true}))
+        fs.writeFileSync(`${this.appPath}/mod_output/${this.modName}/content/itempools.xml`, updatedPools.toString({prettyPrint: true}))
     },
 
-    addToLua(item, appPath) {
+    addToLua(item) {
         let dataToWrite = `\n
 local item_${item.name.replaceAll(' ', '_').toLowerCase()} = Isaac.GetItemIdByName("${item.name}")
 function mod:item_${item.name.replaceAll(' ', '_').toLowerCase()}Fn(player, cacheFlags)\n`
@@ -182,16 +184,16 @@ function mod:item_${item.name.replaceAll(' ', '_').toLowerCase()}Fn(player, cach
     dataToWrite+=`\nend
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.item_${item.name.replaceAll(' ', '_').toLowerCase()}Fn)`
 
-        fs.appendFileSync(`${appPath}/mod_output/${this.modName}/main.lua`, dataToWrite)
+        fs.appendFileSync(`${this.appPath}/mod_output/${this.modName}/main.lua`, dataToWrite)
     },
 
-    saveImgs(files, appPath) {
+    saveImgs(files) {
         files.forEach(async el=>{
-            let path = `${appPath}\\mod_output\\${this.modName}\\resources\\gfx\\items\\collectibles\\`
+            let path = `${this.appPath}\\mod_output\\${this.modName}\\resources\\gfx\\items\\collectibles\\`
             fs.copyFileSync(el.path, `${path}${el.name}`)
             let buffer = await sharp(`${path}${el.name}`)
-                .resize(32, 32, {fit: 'fill'})
-                .toBuffer()
+            .resize(32, 32, {fit: 'fill'})
+            .toBuffer()
             fs.rmSync(`${path}${el.name}`)
             sharp(buffer).toFile(`${path}${el.name}`)
         })
