@@ -1,37 +1,11 @@
 const fs = require('fs')
 const xml = require('xmlbuilder2')
 const child_process = require('child_process')
+const { ItemTemplateGenerator } = require('./itemtemplategenerator')
 const sharp = require('sharp')
 sharp.cache(false)
 
 exports.ModBuilder = {
-    flagsDict: {
-        damage: {
-            attribute: 'Damage',
-            cacheFlag: 'CACHE_DAMAGE'
-        },
-        speed: {
-            attribute: 'MoveSpeed',
-            cacheFlag: 'CACHE_SPEED'
-        },
-        shotspeed: {
-            attribute: 'ShotSpeed',
-            cacheFlag: 'CACHE_SHOTSPEED'
-        },
-        luck: {
-            attribute: 'Luck',
-            cacheFlag: 'CACHE_LUCK'
-        },
-        firedelay: {
-            attribute: 'MaxFireDelay',
-            cacheFlag: 'CACHE_FIREDELAY'
-        },
-        range: {
-            attribute: 'TearRange',
-            cacheFlag: 'CACHE_RANGE'
-        }
-    },
-
     modName: 'Sample mod',
     appPath: '/',
 
@@ -160,30 +134,7 @@ exports.ModBuilder = {
     },
 
     addToLua(item) {
-        let dataToWrite = `\n
-local item_${item.name.replaceAll(' ', '_').toLowerCase()} = Isaac.GetItemIdByName("${item.name}")
-function mod:item_${item.name.replaceAll(' ', '_').toLowerCase()}Fn(player, cacheFlags)\n`
-
-    item.stats.forEach(el=>{
-        let calculateStatsString = el.type == 'firedelay' ?
-         `BaseFireRate = 30 / (player.MaxFireDelay + 1)
-            BaseFireRate = BaseFireRate + (player:GetCollectibleNum(item_${item.name.replaceAll(' ', '_').toLowerCase()}) * ${el.amount})
-            NewFireDelay = (30 - BaseFireRate) / BaseFireRate
-            DifferenceFireDelay = player.MaxFireDelay - NewFireDelay
-            player.MaxFireDelay = player.MaxFireDelay - DifferenceFireDelay` 
-        :
-        `player.${this.flagsDict[el.type].attribute} = player.${this.flagsDict[el.type].attribute} + (player:GetCollectibleNum(item_${item.name.replaceAll(' ', '_').toLowerCase()}) * ${el.type == 'range' ? el.amount * 40 : el.amount})`
-
-        dataToWrite+=`\n    if cacheFlags & CacheFlag.${this.flagsDict[el.type].cacheFlag} == CacheFlag.${this.flagsDict[el.type].cacheFlag} then
-        if player:HasCollectible(item_${item.name.replaceAll(' ', '_').toLowerCase()}) then
-            ${calculateStatsString}
-        end
-    end\n`
-    })
-
-    dataToWrite+=`\nend
-mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.item_${item.name.replaceAll(' ', '_').toLowerCase()}Fn)`
-
+        let dataToWrite = ItemTemplateGenerator.generateItemTemplate(item)
         fs.appendFileSync(`${this.appPath}/mod_output/${this.modName}/main.lua`, dataToWrite)
     },
 
