@@ -1,4 +1,4 @@
-exports.ItemTemplateGenerator = {
+exports.ItemLuaTemplateGenerator = {
     flagsDict: {
         damage: {
             attribute: 'Damage',
@@ -26,7 +26,7 @@ exports.ItemTemplateGenerator = {
         }
     },
 
-    generateItemTemplate(item) {
+    generateItemLuaTemplate(item) {
         let itemTemplateName = item.name.replaceAll(' ', '_').toLowerCase()
     
         let itemTemplateHeader = `\n

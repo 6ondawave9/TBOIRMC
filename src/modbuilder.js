@@ -1,7 +1,7 @@
 const fs = require('fs')
 const xml = require('xmlbuilder2')
 const child_process = require('child_process')
-const { ItemTemplateGenerator } = require('./itemtemplategenerator')
+const { ItemLuaTemplateGenerator } = require('./itemluatemplategenerator')
 const sharp = require('sharp')
 sharp.cache(false)
 
@@ -134,7 +134,7 @@ exports.ModBuilder = {
     },
 
     addToLua(item) {
-        let dataToWrite = ItemTemplateGenerator.generateItemTemplate(item)
+        let dataToWrite = ItemLuaTemplateGenerator.generateItemLuaTemplate(item)
         fs.appendFileSync(`${this.appPath}/mod_output/${this.modName}/main.lua`, dataToWrite)
     },
 
