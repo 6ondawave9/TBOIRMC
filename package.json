@@ -5,7 +5,9 @@
   "description": "TBOI:R mod constructor by ondawave",
   "main": "main.js",
   "scripts": {
-    "test": "electron ."
+    "start": "electron .",
+    "createtest": "node dev/tests/createmod.js",
+    "saveimgstest": "node dev/tests/saveimgs.js"
   },
   "author": "https://github.com/6ondawave9",
   "license": "ISC",

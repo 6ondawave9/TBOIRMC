@@ -9,21 +9,26 @@ exports.ModBuilder = {
     modName: 'Sample mod',
     appPath: '/',
 
-    createMod(mod, appPath) {
+    async createMod(mod, appPath) {
         this.modName = mod.name
         this.appPath = appPath
+
         if (fs.existsSync(`${this.appPath}/mod_output/${this.modName}`)) {
             console.log('Updating mod')
-            fs.rmSync(`${this.appPath}/mod_output/${this.modName}`, { recursive: true, force: true });
+            fs.rmSync(`${this.appPath}/mod_output/${this.modName}`, { recursive: true, force: true })
         } else {
             console.log('Creating mod')
         }
-        this.init(this.appPath)
+
+        this.init()
+
         mod.items.forEach((el, i)=>{
-            this.addItem(el, i, this.appPath)
+            this.addItem(el, i)
         })
-        this.saveImgs(mod.files, this.appPath)
-        console.log('Mod builing complete')
+
+        await this.saveImgs(mod.files)
+
+        console.log('\x1b[32m%s\x1b[0m', 'Mod builing complete')
         
         child_process.exec(`start "" "${this.appPath}/mod_output"`)
     },
@@ -56,10 +61,10 @@ exports.ModBuilder = {
     },
 
     addItem(item, index) {
-        this.addToItemsXml(item, index, this.appPath)
-        this.addToPoolsXml(item, this.appPath)
+        this.addToItemsXml(item, index)
+        this.addToPoolsXml(item)
         if (item.stats) {
-            this.addToLua(item, this.appPath)
+            this.addToLua(item)
         }
     },
 
@@ -138,15 +143,22 @@ exports.ModBuilder = {
         fs.appendFileSync(`${this.appPath}/mod_output/${this.modName}/main.lua`, dataToWrite)
     },
 
-    saveImgs(files) {
-        files.forEach(async el=>{
-            let path = `${this.appPath}\\mod_output\\${this.modName}\\resources\\gfx\\items\\collectibles\\`
-            fs.copyFileSync(el.path, `${path}${el.name}`)
-            let buffer = await sharp(`${path}${el.name}`)
-            .resize(32, 32, {fit: 'fill'})
-            .toBuffer()
-            fs.rmSync(`${path}${el.name}`)
-            sharp(buffer).toFile(`${path}${el.name}`)
-        })
+    async saveImgs(files) {
+        let paths = []
+        for (let el of files) {
+            if (paths.indexOf(el.path) == -1) {
+                paths.push(el.path)
+
+                let path = `${this.appPath}\\mod_output\\${this.modName}\\resources\\gfx\\items\\collectibles\\`
+                let buffer = await sharp(el.path)
+                .resize(32, 32, {fit: 'fill'})
+                .png()
+                .toBuffer()
+                sharp(buffer).toFile(`${path}${el.name.split('.')[0]}.png`)
+
+            } else {
+                console.log('\x1b[33m%s\x1b[0m', `Img duplicate found: ${el.name}`)
+            }
+        }
     }
 }
