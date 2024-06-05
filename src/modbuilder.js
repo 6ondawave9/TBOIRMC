@@ -33,7 +33,7 @@ exports.ModBuilder = {
         child_process.exec(`start "" "${this.appPath}/mod_output"`)
     },
 
-    init: function() {
+    init() {
         if (!fs.existsSync(`${this.appPath}/mod_output`)) {
             fs.mkdirSync(`${this.appPath}/mod_output`)
         }
