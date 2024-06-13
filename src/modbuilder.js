@@ -28,7 +28,7 @@ exports.ModBuilder = {
 
         await this.saveImgs(mod.files)
 
-        console.log('\x1b[32m%s\x1b[0m', 'Mod builing complete')
+        console.log('\x1b[32m%s\x1b[0m', 'Mod building complete')
         
         child_process.exec(`start "" "${this.appPath}/mod_output"`)
     },
